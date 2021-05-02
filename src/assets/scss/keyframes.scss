@@ -1,0 +1,35 @@
+@keyframes cloud {
+  0% {
+    transform: translateY(0px) translateX(-9px) scale(1.8);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-9px) scale(1.8);
+  }
+  100% {
+    transform: translateY(0px) translateX(-9px) scale(1.8);
+  }
+}
+
+@keyframes sun {
+  0% {
+    stroke-width: 20px;
+  }
+  50% {
+    transform: rotate(180deg);
+    stroke-width: 10px;
+  }
+  100% {
+    transform: rotate(360deg);
+    stroke-width: 20px;
+  }
+}
+
+@keyframes rainfall {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+}
