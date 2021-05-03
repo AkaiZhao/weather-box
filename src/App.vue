@@ -1,9 +1,6 @@
 <template lang="pug">
-h1.title Weather Apps
-weather-box
-//- icon-rain
-//- icon-sun
-//- icon-sun-cloud
+.background
+  weather-box
 </template>
 
 <script setup>
@@ -17,9 +14,16 @@ import WeatherBox from './components/WeatherBox/index.vue';
 <style lang="scss">
 @import url("./assets/scss/keyframes.scss");
 
-body {
-  background-color: #232323;
+* {
   color: #fff;
+}
+.background {
+  height: 100vh;
+  background: linear-gradient(#7494c3, #ecc5be);
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon {
