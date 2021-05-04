@@ -4,10 +4,15 @@
 </template>
 
 <script setup>
+import store from './store/index';
+import { getTaiwanWeather } from './services/fetch';
 import IconRain from './components/Icons/Rain.vue';
 import IconSun from './components/Icons/Sun.vue';
 import IconSunCloud from './components/Icons/SunCloud.vue';
 import WeatherBox from './components/WeatherBox/index.vue';
+
+store.dispatch('getWeather')
+
 
 </script>
 

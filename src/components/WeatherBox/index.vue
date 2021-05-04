@@ -18,14 +18,14 @@
 </template>
 
 <script setup>
-import IconRain from '../Icons/Rain.vue';
-import IconSun from '../Icons/Sun.vue';
-import IconSunCloud from '../Icons/SunCloud.vue';
-import WeatherBox from '../WeatherBox/index.vue';
-import { ref } from "vue";
+import IconRain from '../Icons/Rain.vue'
+import IconSun from '../Icons/Sun.vue'
+import IconSunCloud from '../Icons/SunCloud.vue'
+import WeatherBox from '../WeatherBox/index.vue'
+import { shallowRef } from 'vue'
 
-
-const dailyArr = ref([
+ 
+const dailyArr = shallowRef([
   {key: 'sun', name:'SUN', icon: IconSun},
   {key: 'mon', name:'MON', icon: IconSun},
   {key: 'tue', name:'TUE', icon: IconSun},

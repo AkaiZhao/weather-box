@@ -6,10 +6,10 @@ const fetcher = (url = '') => {
   return fetch(_url)
 }
 
-export const fetchTaiwanWeather = (config = {}) => {
+export const getTaiwanWeather = (config = {}) => {
   config.Authorization = import.meta.env.VITE_WEAHTER_TOKEN
   const query = qs.stringify(config, { addQueryPrefix: true })
   const api = `/v1/rest/datastore/F-D0047-091${query}`
-  return fetcher(api)
+  return fetcher(api).then(res=>res.json())
 }
 export default fetcher
