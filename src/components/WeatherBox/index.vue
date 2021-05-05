@@ -1,4 +1,5 @@
 <template lang="pug">
+//- pre {{ dailyWeather }}
 .weather-box
   .weather-box-main
     .main-info
@@ -8,13 +9,15 @@
 
         .main-info-detials-subtitle {{ time }}
         component.main-info-detials-icon(:is="IconSunCloud")
-        .main-info-detials-label {{currentCity?.Wx.value}}
-      .main-info-temp {{currentCity?.T.value}}°C
+        .main-info-detials-label {{ currentCity?.Wx.value }}
+      .main-info-temp {{ currentCity?.T.value }}°C
   .weather-box-footer
     .weather-box-footer-tabs
       .weather-box-footer-tab weathers
     .weather-box-footer-row
-      .weather-box-footer-daily(v-for="{ key, name, icon } in dailyArr")
+      .weather-box-footer-daily(
+        v-for="{ key, name, icon, desc } in dailyWeather"
+      )
         .daily-title {{ name }}
         component.icon(:is="icon")
 </template>
@@ -28,22 +31,36 @@ import { computed, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 import moment from 'moment'
 import { useStore } from 'vuex'
 
+const daily = [
+  { key: 'sun', name: 'SUN'},
+  { key: 'mon', name: 'MON'},
+  { key: 'tue', name: 'TUE'},
+  { key: 'wed', name: 'WED'},
+  { key: 'thu', name: 'THU'},
+  { key: 'fri', name: 'FRI'},
+  { key: 'sat', name: 'SAT'}
+]
+
+const icons = {
+  '多雲時晴': IconSunCloud,
+  '晴時多雲': IconSunCloud,
+  '多雲時陰': IconSunCloud,
+  '多雲': IconRain,
+}
+
 const store = useStore()
 
 const current = ref(20)
 const time = ref(moment().format('YYYY/MM/DD HH:mm'))
 const citys = computed(() => store.state.citys)
-const currentCity = computed(() => citys.value[current.value])
-const dailyArr = shallowRef([
-  { key: 'sun', name: 'SUN', icon: IconSun },
-  { key: 'mon', name: 'MON', icon: IconSun },
-  { key: 'tue', name: 'TUE', icon: IconSun },
-  { key: 'wed', name: 'WED', icon: IconSun },
-  { key: 'thu', name: 'THU', icon: IconSun },
-  { key: 'fri', name: 'FRI', icon: IconSun },
-  { key: 'sat', name: 'SAT', icon: IconSun }
-])
-
+const currentCity = computed(() => citys?.value?.[current.value])
+console.log(currentCity);
+const dailyWeather = computed(()=>daily.map((item,i)=>({
+  ...item,
+  desc: currentCity?.value?.weeks[i],
+  icon: icons[currentCity?.value?.weeks[i]] || IconSun
+})))
+watch(dailyWeather,(b)=>console.log(b))
 </script>
 
 <style lang="scss">
@@ -54,7 +71,20 @@ const dailyArr = shallowRef([
   border-radius: 8px;
   overflow: hidden;
   background-color: rgba(#fff, 0.1);
+  position: relative;
   box-shadow: 0 0 20px -10px rgba(#fff, 0.2);
+  &::before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: url("src/assets/weather-bg.jpg");
+    background-size: cover;
+    filter: brightness(0.75) grayscale(1) blur(5px);
+    opacity: 0.15;
+  }
 
   &-main {
     padding: 24px 24px 0px 24px;
@@ -117,7 +147,6 @@ const dailyArr = shallowRef([
       font-weight: bold;
     }
   }
-
 }
 
 .slide-enter-active,

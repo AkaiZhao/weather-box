@@ -26,33 +26,37 @@ const store = createStore({
     currentCity: ''
   }),
   mutations: {
-    setWeathers (state, weathers) {
+    setWeathers(state, weathers) {
       state.weathers = weathers
     },
-    setCitys (state, citys) {
+    setCitys(state, citys) {
       state.citys = citys
     }
   },
   actions: {
-    async  getWeather ({ commit }) {
+    async getWeather({ commit }) {
       const { records } = await getTaiwanWeather()
       const citys = records.locations[0].location
-        .map(item => ({
-          city: item.locationName,
-          weeks: item.weatherElement?.reduce((weather, element) => {
-            console.log(element)
-            return weather
-          }, []),
-          ...item.weatherElement?.reduce((weather, element) => {
-            if (Object.keys(desc).includes(element.elementName)) {
-              weather[element.elementName] = {
-                value: element.time[0].elementValue[0].value,
-                description: element.description
+        .map(item => {
+          return {
+            city: item.locationName,
+            weeks: item.weatherElement
+              ?.find(element => element.elementName === 'Wx')
+              ?.time
+              ?.filter((_, index) => !(index % 2))
+              ?.slice(0, 7)
+              ?.map(({ elementValue }) => elementValue[0].value),
+            ...item.weatherElement?.reduce((weather, element) => {
+              if (Object.keys(desc).includes(element.elementName)) {
+                weather[element.elementName] = {
+                  value: element.time[0].elementValue[0].value,
+                  description: element.description
+                }
               }
-            }
-            return weather
-          }, {})
-        }))
+              return weather
+            }, {})
+          }
+        })
       console.table(citys)
       commit('setCitys', citys)
     }
