@@ -7,7 +7,8 @@ function getAlias () {
   const { baseUrl, paths } = jsconfig.compilerOptions
   const pathKey = Object.keys(paths)
   pathKey.reduce((res, key) => {
-    res[key] = path.resolve(__dirname, `${baseUrl}/${pathKey[key]}`)
+    res[key.replace('*', '')] = path.resolve(__dirname, `${baseUrl}/${paths[key]}`).replace('/*', '')
+    console.log(res)
     return res
   }, {})
 }
@@ -17,6 +18,8 @@ export default defineConfig({
   base: '/weather-box/',
   plugins: [vue()],
   resolve: {
-    alias: getAlias()
+    alias: {
+      src: path.resolve(__dirname, '/src')
+    }
   }
 })

@@ -3,13 +3,15 @@
   .weather-box-main
     .main-info
       .main-info-detials
-        .main-info-detials-title City Name
-        .main-info-detials-subtitle 2021/05/03 16:45
+        transition(name="slide")
+          .main-info-detials-title(@click="handleOpenList") {{ currentCity?.city }}
+
+        .main-info-detials-subtitle {{ time }}
         component.main-info-detials-icon(:is="IconSunCloud")
-        .main-info-detials-label cloudy
-      .main-info-temp 27°
+        .main-info-detials-label {{currentCity?.Wx.value}}
+      .main-info-temp {{currentCity?.T.value}}°C
   .weather-box-footer
-    .weather-box-footer-tabs 
+    .weather-box-footer-tabs
       .weather-box-footer-tab weathers
     .weather-box-footer-row
       .weather-box-footer-daily(v-for="{ key, name, icon } in dailyArr")
@@ -22,19 +24,25 @@ import IconRain from '../Icons/Rain.vue'
 import IconSun from '../Icons/Sun.vue'
 import IconSunCloud from '../Icons/SunCloud.vue'
 import WeatherBox from '../WeatherBox/index.vue'
-import { shallowRef } from 'vue'
+import { computed, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
+import moment from 'moment'
+import { useStore } from 'vuex'
 
- 
+const store = useStore()
+
+const current = ref(20)
+const time = ref(moment().format('YYYY/MM/DD HH:mm'))
+const citys = computed(() => store.state.citys)
+const currentCity = computed(() => citys.value[current.value])
 const dailyArr = shallowRef([
-  {key: 'sun', name:'SUN', icon: IconSun},
-  {key: 'mon', name:'MON', icon: IconSun},
-  {key: 'tue', name:'TUE', icon: IconSun},
-  {key: 'wed', name:'WED', icon: IconSun},
-  {key: 'thu', name:'THU', icon: IconSun},
-  {key: 'fri', name:'FRI', icon: IconSun},
-  {key: 'sat', name:'SAT', icon: IconSun},
+  { key: 'sun', name: 'SUN', icon: IconSun },
+  { key: 'mon', name: 'MON', icon: IconSun },
+  { key: 'tue', name: 'TUE', icon: IconSun },
+  { key: 'wed', name: 'WED', icon: IconSun },
+  { key: 'thu', name: 'THU', icon: IconSun },
+  { key: 'fri', name: 'FRI', icon: IconSun },
+  { key: 'sat', name: 'SAT', icon: IconSun }
 ])
-
 
 </script>
 
@@ -58,6 +66,7 @@ const dailyArr = shallowRef([
           letter-spacing: 1.3px;
           font-size: 28px;
           padding-bottom: 4px;
+          position: relative;
         }
         &-subtitle {
           font-size: 16px;
@@ -108,5 +117,16 @@ const dailyArr = shallowRef([
       font-weight: bold;
     }
   }
+
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
 }
 </style>
