@@ -17,8 +17,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: build
         env:
-          WEATHER_AUTH: ${{ secrets.WeatherAuth }}
-        run: yarn && WEATHER_AUTH="$WEATHER_AUTH" yarn build
+          WEATHER_AUTH: ${{ secrets.Weatherauth }}
+        run: yarn && VITE_WEAHTER_TOKEN="$WEATHER_AUTH" yarn build
 
       - uses: crazy-max/ghaction-github-pages@v2.2.0
         name: deploy
